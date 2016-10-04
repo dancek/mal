@@ -3,7 +3,7 @@ from types import *
 
 TOKENIZER_RE = re.compile('''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
 
-INT_RE = re.compile('\d+')
+INT_RE = re.compile('-?\d+')
 
 class Reader(object):
     def __init__(self, tokens):
