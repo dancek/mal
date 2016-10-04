@@ -6,6 +6,7 @@
 .m2
 .ivy2
 .sbt
+.vscode/
 */experiments
 */node_modules
 *.o
