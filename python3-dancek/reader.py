@@ -31,19 +31,21 @@ def read_form(reader):
     first_token = reader.peek()
     if first_token == '(':
         return read_list(reader)
+    elif first_token == '[':
+        return read_list(reader, MalVector)
     else:
         return read_atom(reader)
 
-def read_list(reader):
+def read_list(reader, type=MalList):
     reader.next()
     ls = []
     while True:
         token = reader.peek()
-        if token == ')':
+        if token == type.terminator:
             reader.next()
-            return MalList(ls)
+            return type(ls)
         elif token == '': # EOF too early
-            raise MalException("expected ')', got EOF")
+            raise MalException("expected '%s', got EOF", type.terminator)
         else:
             ls.append(read_form(reader))
 
