@@ -20,6 +20,12 @@ class MalList(MalType):
 class MalVector(MalType):
     terminator = ']'
 
+class MalNil(MalType):
+    pass
+
+class MalBoolean(MalType):
+    pass
+
 class MalException(Exception):
     def __init__(self, content):
         self.content = content

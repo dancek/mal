@@ -45,7 +45,7 @@ def read_list(reader, type=MalList):
             reader.next()
             return type(ls)
         elif token == '': # EOF too early
-            raise MalException("expected '%s', got EOF", type.terminator)
+            raise MalException("expected '%s', got EOF" % type.terminator)
         else:
             ls.append(read_form(reader))
 
@@ -55,5 +55,11 @@ def read_atom(reader):
         return int(atom)
     elif atom.startswith('"'):
         return MalString(atom[1:-1])
+    elif atom == 'nil':
+        return MalNil(None)
+    elif atom == 'true':
+        return MalBoolean(True)
+    elif atom == 'false':
+        return MalBoolean(False)
     else:
         return MalSymbol(atom)
