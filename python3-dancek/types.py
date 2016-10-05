@@ -1,34 +1,18 @@
-class MalType(object):
-    def __init__(self, content):
-        self.content = content
-
-    def __str__(self):
-        return "%s(%s)" % (self.__class__.__name__, self.content)
-
-    def __repr__(self):
-        return self.__str__()
-
-class MalString(MalType):
+class MalString(str):
     pass
 
-class MalSymbol(MalType):
+class MalSymbol(str):
     pass
 
-class MalList(MalType):
+class MalList(list):
     terminator = ')'
 
-class MalVector(MalType):
+class MalVector(list):
     terminator = ']'
 
-class MalNil(MalType):
-    pass
-
-class MalBoolean(MalType):
-    pass
-
 class MalException(Exception):
-    def __init__(self, content):
-        self.content = content
+    def __init__(self, description):
+        self.description = description
 
     def __str__(self):
-        return self.content
+        return self.description

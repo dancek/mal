@@ -1,15 +1,14 @@
-from types import MalException, MalType
+from types import MalException
 
 class Env(object):
-    def __init__(self, outer):
+    def __init__(self, outer, binds=[], exprs=[]):
         self.data = {}
         self.outer = outer
+        for k,v in zip(binds, exprs):
+            self.set(k, v)
 
     def set(self, key, value):
-        k = key
-        if isinstance(key, MalType):
-            k = key.content
-        self.data[k] = value
+        self.data[key] = value
         return value
 
     def find(self, key):

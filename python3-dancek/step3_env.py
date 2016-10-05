@@ -14,21 +14,21 @@ def READ(s):
 
 def EVAL(ast, env):
     if isinstance(ast, MalList):
-        if len(ast.content) == 0:
+        if len(ast) == 0:
             return ast
 
-        call = ast.content[0].content
+        call = ast[0]
         if call == 'def!':
-            f_name, f_def = ast.content[1:]
+            f_name, f_def = ast[1:]
             return env.set(f_name, EVAL(f_def, env))
         elif call == 'let*':
             let_env = Env(env)
-            bindings = ast.content[1].content
+            bindings = ast[1]
             for i in range(0, len(bindings), 2):
                 key = bindings[i]
                 value = EVAL(bindings[i+1], let_env)
                 let_env.set(key, value)
-            return EVAL(ast.content[2], let_env)
+            return EVAL(ast[2], let_env)
         else:
             f, *args = eval_ast(ast, env)
             return f(*args)
@@ -43,9 +43,9 @@ def rep(s):
 
 def eval_ast(ast, env):
     if isinstance(ast, MalSymbol):
-        return env.get(ast.content)
+        return env.get(ast)
     elif isinstance(ast, MalList):
-        return list(map(lambda x: EVAL(x, env), ast.content))
+        return list(map(lambda x: EVAL(x, env), ast))
     else:
         return ast
 

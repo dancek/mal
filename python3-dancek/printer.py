@@ -5,19 +5,21 @@ def pr_str(tree):
 
 def _tree_to_string(tree):
     if isinstance(tree, MalList):
-        return '(%s)' % _list_contents(tree.content)
+        return '(%s)' % _list_contents(tree)
     elif isinstance(tree, MalVector):
-        return '[%s]' % _list_contents(tree.content)
+        return '[%s]' % _list_contents(tree)
     elif isinstance(tree, MalSymbol):
-        return tree.content
+        return tree
     elif isinstance(tree, MalString):
-        return '"%s"' % tree.content
+        return '"%s"' % tree
+    elif tree is None:
+        return 'nil'
+    elif tree is True:
+        return 'true'
+    elif tree is False:
+        return 'false'
     elif isinstance(tree, int):
         return '%d' % tree
-    elif isinstance(tree, MalNil):
-        return 'nil'
-    elif isinstance(tree, MalBoolean):
-        return 'true' if tree.content else 'false'
 
 def _list_contents(lst):
     items = [_tree_to_string(x) for x in lst]

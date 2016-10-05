@@ -56,10 +56,10 @@ def read_atom(reader):
     elif atom.startswith('"'):
         return MalString(atom[1:-1])
     elif atom == 'nil':
-        return MalNil(None)
+        return None
     elif atom == 'true':
-        return MalBoolean(True)
+        return True
     elif atom == 'false':
-        return MalBoolean(False)
+        return False
     else:
         return MalSymbol(atom)

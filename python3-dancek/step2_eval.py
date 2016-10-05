@@ -12,7 +12,7 @@ def READ(s):
 
 def EVAL(ast, env):
     if isinstance(ast, MalList):
-        if len(ast.content) == 0:
+        if len(ast) == 0:
             return ast
         f, *args = eval_ast(ast, env)
         return f(*args)
@@ -27,12 +27,12 @@ def rep(s):
 
 def eval_ast(ast, env):
     if isinstance(ast, MalSymbol):
-        if ast.content in env:
-            return env[ast.content]
+        if ast in env:
+            return env[ast]
         else:
-            raise MalException("%s not defined" % ast.content)
+            raise MalException("%s not defined" % ast)
     elif isinstance(ast, MalList):
-        return map(lambda x: EVAL(x, env), ast.content)
+        return map(lambda x: EVAL(x, env), ast)
     else:
         return ast
 
