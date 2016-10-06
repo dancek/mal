@@ -4,11 +4,24 @@ class MalString(str):
 class MalSymbol(str):
     pass
 
+class MalKeyword(str):
+    pass
+
 class MalList(list):
     terminator = ')'
 
 class MalVector(list):
     terminator = ']'
+
+class MalHashmap(dict):
+    terminator = '}'
+
+    def __init__(self, list_or_dict):
+        if isinstance(list_or_dict, list):
+            # constructed from alternating keys and values
+            dict.__init__(self, zip(list_or_dict[::2], list_or_dict[1::2]))
+        else:
+            dict.__init__(self, list_or_dict)
 
 class MalException(Exception):
     def __init__(self, description):

@@ -33,6 +33,10 @@ def eval_ast(ast, env):
             raise MalException("%s not defined" % ast)
     elif isinstance(ast, MalList):
         return map(lambda x: EVAL(x, env), ast)
+    elif isinstance(ast, MalVector):
+        return MalVector(map(lambda x: EVAL(x, env), ast))
+    elif isinstance(ast, MalHashmap):
+        return MalHashmap({k: EVAL(v, env) for k,v in ast.items()})
     else:
         return ast
 

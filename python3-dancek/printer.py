@@ -8,6 +8,8 @@ def _tree_to_string(tree, print_readably):
         return '(%s)' % _list_contents(tree, print_readably)
     elif isinstance(tree, MalVector):
         return '[%s]' % _list_contents(tree, print_readably)
+    elif isinstance(tree, MalHashmap):
+        return '{%s}' % _dict_contents(tree, print_readably)
     elif isinstance(tree, MalSymbol):
         return tree
     elif isinstance(tree, MalString):
@@ -16,6 +18,8 @@ def _tree_to_string(tree, print_readably):
             return '"%s"' % s
         else:
             return '%s' % tree
+    elif isinstance(tree, MalKeyword):
+        return tree
     elif isinstance(tree, MalAtom):
         return "(atom %s)" % tree.target
     elif tree is None:
@@ -34,4 +38,8 @@ def _tree_to_string(tree, print_readably):
 
 def _list_contents(lst, print_readably):
     items = [_tree_to_string(x, print_readably) for x in lst]
+    return ' '.join(items)
+
+def _dict_contents(dct, print_readably):
+    items = ['%s %s' % (_tree_to_string(k, print_readably), _tree_to_string(v, print_readably)) for k,v in dct.items()]
     return ' '.join(items)

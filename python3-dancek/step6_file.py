@@ -95,6 +95,10 @@ def eval_ast(ast, env):
         return env.get(ast)
     elif isinstance(ast, MalList):
         return MalList(map(lambda x: EVAL(x, env), ast))
+    elif isinstance(ast, MalVector):
+        return MalVector(map(lambda x: EVAL(x, env), ast))
+    elif isinstance(ast, MalHashmap):
+        return MalHashmap({k: EVAL(v, env) for k,v in ast.items()})
     else:
         return ast
 

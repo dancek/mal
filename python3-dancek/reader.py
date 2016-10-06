@@ -47,6 +47,8 @@ def read_form(reader):
         return read_list(reader)
     elif first_token == '[':
         return read_list(reader, MalVector)
+    elif first_token == '{':
+        return read_list(reader, MalHashmap)
     else:
         return read_atom(reader)
 
@@ -71,6 +73,8 @@ def read_atom(reader):
         return int(atom)
     elif atom.startswith('"'):
         return MalString(atom[1:-1])
+    elif atom.startswith(':'):
+        return MalKeyword(atom)
     elif atom == 'nil':
         return None
     elif atom == 'true':
