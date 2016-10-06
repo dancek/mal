@@ -1,11 +1,11 @@
 import printer
-from types import MalList
+from types import MalList, MalString
 
 def pr_str(*args):
-    return ' '.join(map(printer.pr_str, args))
+    return MalString(' '.join(map(printer.pr_str, args)))
 
 def str_(*args):
-    return ''.join(map(lambda x: printer.pr_str(x, False), args))
+    return MalString(''.join(map(lambda x: printer.pr_str(x, False), args)))
 
 def prn(*args):
     print(' '.join(map(printer.pr_str, args)))

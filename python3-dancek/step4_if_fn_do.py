@@ -35,7 +35,7 @@ def EVAL(ast, env):
             return EVAL(ast[2], let_env)
 
         elif call == 'do':
-            return eval_ast(ast[1:], env)[-1]
+            return list(map(lambda x: EVAL(x, env), ast[1:]))[-1]
 
         elif call == 'if':
             test = EVAL(ast[1], env)
@@ -72,7 +72,7 @@ def eval_ast(ast, env):
     if isinstance(ast, MalSymbol):
         return env.get(ast)
     elif isinstance(ast, MalList):
-        return list(map(lambda x: EVAL(x, env), ast))
+        return MalList(map(lambda x: EVAL(x, env), ast))
     else:
         return ast
 

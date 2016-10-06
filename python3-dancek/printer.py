@@ -10,7 +10,7 @@ def _tree_to_string(tree, print_readably):
         return '[%s]' % _list_contents(tree, print_readably)
     elif isinstance(tree, MalSymbol):
         return tree
-    elif isinstance(tree, str): # or MalString
+    elif isinstance(tree, MalString):
         if print_readably:
             s = tree.replace('"', '\\"')
             return '"%s"' % s
