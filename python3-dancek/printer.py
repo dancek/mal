@@ -16,6 +16,8 @@ def _tree_to_string(tree, print_readably):
             return '"%s"' % s
         else:
             return '%s' % tree
+    elif isinstance(tree, MalAtom):
+        return "(atom %s)" % tree.target
     elif tree is None:
         return 'nil'
     elif tree is True:

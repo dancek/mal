@@ -23,3 +23,17 @@ class MalFunction(object):
         self.params = params
         self.env = env
         self.fn = fn
+
+    def __call__(self, *args):
+        return self.fn(*args)
+
+class MalAtom(object):
+    def __init__(self, target):
+        self.set(target)
+
+    def set(self, target):
+        self.target = target
+        return target
+
+class CommentException(Exception):
+    pass

@@ -1,7 +1,7 @@
 import re
 from types import *
 
-TOKENIZER_RE = re.compile('''[\s,]*(~@|[\[\]{}()'`~^@]|"(?:\\.|[^\\"])*"|;.*|[^\s\[\]{}('"`,;)]*)''')
+TOKENIZER_RE = re.compile(r"""[\s,]*(~@|[\[\]{}()'`~^@]|"(?:[\\].|[^\\"])*"?|;.*|[^\s\[\]{}()'"`@,;]+)""")
 
 INT_RE = re.compile('-?\d+')
 
@@ -11,18 +11,32 @@ class Reader(object):
         self.position = 0
 
     def next(self):
-        token = self.tokens[self.position]
+        token = self.peek()
         self.position += 1
         return token
 
     def peek(self):
+        if self.position >= len(self.tokens):
+            return None
         token = self.tokens[self.position]
+
+        # skip comments
+        while token.startswith(';'):
+            #print('skipping %s' % token)
+            self.position += 1
+            if self.position >= len(self.tokens):
+                return None
+            token = self.tokens[self.position]
+
         return token
 
 def read_str(s):
     tokens = tokenizer(s)
+    #print(tokens)
     reader = Reader(tokens)
-    return read_form(reader)
+    form = read_form(reader)
+    #print(form)
+    return form
 
 def tokenizer(s):
     return TOKENIZER_RE.findall(s)
@@ -51,7 +65,9 @@ def read_list(reader, type=MalList):
 
 def read_atom(reader):
     atom = reader.next()
-    if INT_RE.fullmatch(atom):
+    if atom is None:
+        return None
+    elif INT_RE.fullmatch(atom):
         return int(atom)
     elif atom.startswith('"'):
         return MalString(atom[1:-1])

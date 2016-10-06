@@ -1,5 +1,5 @@
-import printer
-from types import MalList, MalString
+import printer, reader
+from types import MalList, MalString, MalAtom
 
 def pr_str(*args):
     return MalString(' '.join(map(printer.pr_str, args)))
@@ -12,6 +12,10 @@ def prn(*args):
 
 def println(*args):
     print(' '.join(map(lambda x: printer.pr_str(x, False), args)))
+
+def slurp(filename):
+    with open(filename) as f:
+        return MalString(f.read())
 
 ns = {
     '+': lambda a,b: a+b,
@@ -31,4 +35,12 @@ ns = {
     '<=': lambda a,b: a <= b,
     '>': lambda a,b: a > b,
     '>=': lambda a,b: a >= b,
+    'read-string': reader.read_str,
+    'slurp': slurp,
+    'atom': lambda x: MalAtom(x),
+    'atom?': lambda x: isinstance(x, MalAtom),
+    'deref': lambda atom: atom.target,
+    'reset!': lambda atom, target: atom.set(target),
+    'swap!': lambda atom, f, *args: atom.set(f(atom.target, *args)),
+    '*ARGV*': MalList([]),
 }
