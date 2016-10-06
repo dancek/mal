@@ -30,7 +30,7 @@ ns = {
     'list?': lambda xs: isinstance(xs, MalList),
     'empty?': lambda xs: len(xs) == 0,
     'count': lambda xs: len(xs) if isinstance(xs, MalList) else 0,
-    '=': lambda a,b: a == b,
+    '=': lambda a,b: a == b and type(a) == type(b),
     '<': lambda a,b: a < b,
     '<=': lambda a,b: a <= b,
     '>': lambda a,b: a > b,
@@ -43,4 +43,6 @@ ns = {
     'reset!': lambda atom, target: atom.set(target),
     'swap!': lambda atom, f, *args: atom.set(f(atom.target, *args)),
     '*ARGV*': MalList([]),
+    'cons': lambda x, tail: MalList([x] + tail),
+    'concat': lambda *args: MalList(sum(args, [])),
 }
