@@ -16,3 +16,10 @@ class MalException(Exception):
 
     def __str__(self):
         return self.description
+
+class MalFunction(object):
+    def __init__(self, ast, params, env, fn):
+        self.ast = ast
+        self.params = params
+        self.env = env
+        self.fn = fn
