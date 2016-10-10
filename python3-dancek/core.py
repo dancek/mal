@@ -36,7 +36,7 @@ ns = {
     'prn': prn,
     'println': println,
     'list': lambda *args: MalList(args),
-    'list?': lambda xs: isinstance(xs, list),
+    'list?': lambda xs: isinstance(xs, MalList),
     'empty?': lambda xs: len(xs) == 0,
     'count': lambda xs: len(xs) if isinstance(xs, list) else 0,
     '=': equals,
