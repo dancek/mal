@@ -1,11 +1,17 @@
-from types import MalException
+from types import MalException, MalList
 
 class Env(object):
     def __init__(self, outer, binds=[], exprs=[]):
         self.data = {}
         self.outer = outer
-        for k,v in zip(binds, exprs):
-            self.set(k, v)
+
+        # bind parameter values to names
+        for i in range(len(binds)):
+            bind = binds[i]
+            if bind == '&': # variable-length args as list
+                self.set(binds[i+1], MalList(exprs[i:]))
+                break
+            self.set(bind, exprs[i])
 
     def set(self, key, value):
         self.data[key] = value
