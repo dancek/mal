@@ -14,7 +14,10 @@ def _tree_to_string(tree, print_readably):
         return tree
     elif isinstance(tree, MalString):
         if print_readably:
-            s = tree.replace('"', '\\"')
+            s = tree \
+                .replace('\\', '\\\\') \
+                .replace('\n', '\\n') \
+                .replace('"', '\\"')
             return '"%s"' % s
         else:
             return '%s' % tree

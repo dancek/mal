@@ -78,7 +78,12 @@ def read_atom(reader):
     elif INT_RE.fullmatch(atom):
         return int(atom)
     elif atom.startswith('"'):
-        return MalString(atom[1:-1].replace('\\"', '"'))
+        s = atom[1:-1]
+        unescaped = s \
+            .replace('\\"', '"') \
+            .replace('\\n', '\n') \
+            .replace('\\\\', '\\')
+        return MalString(unescaped)
     elif atom.startswith(':'):
         return MalKeyword(atom)
     elif atom == 'nil':
