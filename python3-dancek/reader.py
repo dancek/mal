@@ -16,7 +16,7 @@ class Reader(object):
         return token
 
     def peek(self):
-        if self.position >= len(self.tokens):
+        if self.eof():
             return None
         token = self.tokens[self.position]
 
@@ -24,11 +24,17 @@ class Reader(object):
         while token.startswith(';'):
             #print('skipping %s' % token)
             self.position += 1
-            if self.position >= len(self.tokens):
+            if self.eof():
                 return None
             token = self.tokens[self.position]
 
         return token
+
+    def eof(self):
+        """Is the reader at the end of the string?
+
+        This is not in the MAL guide, but I find it useful."""
+        return self.position >= len(self.tokens)
 
 def read_str(s):
     tokens = tokenizer(s)
@@ -60,7 +66,7 @@ def read_list(reader, type=MalList):
         if token == type.terminator:
             reader.next()
             return type(ls)
-        elif token == '': # EOF too early
+        elif token == '' or reader.eof(): # EOF too early
             raise MalException("expected '%s', got EOF" % type.terminator)
         else:
             ls.append(read_form(reader))
@@ -72,7 +78,7 @@ def read_atom(reader):
     elif INT_RE.fullmatch(atom):
         return int(atom)
     elif atom.startswith('"'):
-        return MalString(atom[1:-1])
+        return MalString(atom[1:-1].replace('\\"', '"'))
     elif atom.startswith(':'):
         return MalKeyword(atom)
     elif atom == 'nil':

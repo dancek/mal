@@ -17,6 +17,15 @@ def slurp(filename):
     with open(filename) as f:
         return MalString(f.read())
 
+# deep equality that checks type but considers MalList and MalVector the same
+def equals(a, b):
+    if a == b and type(a) == type(b):
+        return True
+    elif isinstance(a, list) and isinstance(b, list) and len(a) == len(b):
+        return all(equals(a_, b_) for a_, b_ in zip(a,b))
+    else:
+        return False
+
 ns = {
     '+': lambda a,b: a+b,
     '-': lambda a,b: a-b,
@@ -27,10 +36,10 @@ ns = {
     'prn': prn,
     'println': println,
     'list': lambda *args: MalList(args),
-    'list?': lambda xs: isinstance(xs, MalList),
+    'list?': lambda xs: isinstance(xs, list),
     'empty?': lambda xs: len(xs) == 0,
-    'count': lambda xs: len(xs) if isinstance(xs, MalList) else 0,
-    '=': lambda a,b: a == b and type(a) == type(b),
+    'count': lambda xs: len(xs) if isinstance(xs, list) else 0,
+    '=': equals,
     '<': lambda a,b: a < b,
     '<=': lambda a,b: a <= b,
     '>': lambda a,b: a > b,
