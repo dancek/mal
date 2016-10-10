@@ -49,12 +49,28 @@ def tokenizer(s):
 
 def read_form(reader):
     first_token = reader.peek()
+
+    # data structures
     if first_token == '(':
         return read_list(reader)
     elif first_token == '[':
         return read_list(reader, MalVector)
     elif first_token == '{':
         return read_list(reader, MalHashmap)
+
+    # reader macros
+    elif first_token == "'":
+        return reader_macro(reader, 'quote')
+    elif first_token == "`":
+        return reader_macro(reader, 'quasiquote')
+    elif first_token == "~":
+        return reader_macro(reader, 'unquote')
+    elif first_token == "~@":
+        return reader_macro(reader, 'splice-unquote')
+    elif first_token == "@":
+        return reader_macro(reader, 'deref')
+
+    # atoms
     else:
         return read_atom(reader)
 
@@ -94,3 +110,7 @@ def read_atom(reader):
         return False
     else:
         return MalSymbol(atom)
+
+def reader_macro(reader, symbol):
+    reader.next()
+    return MalList([MalSymbol(symbol), read_form(reader)])
