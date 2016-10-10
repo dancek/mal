@@ -45,7 +45,9 @@ def eval_ast(ast, env):
     if isinstance(ast, MalSymbol):
         return env.get(ast)
     elif isinstance(ast, MalList):
-        return list(map(lambda x: EVAL(x, env), ast))
+        return MalList(map(lambda x: EVAL(x, env), ast))
+    elif isinstance(ast, MalVector):
+        return MalVector(map(lambda x: EVAL(x, env), ast))
     else:
         return ast
 
