@@ -43,7 +43,7 @@ def EVAL(ast, env):
                 continue
 
             elif call == 'do':
-                list(map(lambda x: EVAL(x, env), ast[1:-2])) # force evaluation using list
+                list(map(lambda x: EVAL(x, env), ast[1:-1])) # force evaluation using list
                 # TCO
                 ast = ast[-1]
                 continue
