@@ -127,9 +127,9 @@ def main():
     rep("(def! load-file (fn* (f) (eval (read-string (str \"(do \" (slurp f) \")\")))))")
 
     if len(sys.argv) > 1:
-        filename, *argv = sys.argv[1:]
-        print(argv)
-        if argv:
+        filename = sys.argv[1]
+        if len(sys.argv) > 2:
+            argv = MalList(map(MalString, sys.argv[2:]))
             repl_env.set("*ARGV*", argv)
         rep('(load-file "%s")' % filename)
         sys.exit(0)
