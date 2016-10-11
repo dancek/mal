@@ -1,5 +1,5 @@
 import printer, reader
-from types import MalList, MalString, MalAtom
+from types import MalList, MalString, MalAtom, MalException
 
 def pr_str(*args):
     return MalString(' '.join(map(printer.pr_str, args)))
@@ -25,6 +25,12 @@ def equals(a, b):
         return all(equals(a_, b_) for a_, b_ in zip(a,b))
     else:
         return False
+
+def nth(xs, i):
+    try:
+        return xs[i]
+    except IndexError:
+        raise MalException("Index %d out of bounds for %s" % (i, xs))
 
 ns = {
     '+': lambda a,b: a+b,
@@ -54,4 +60,7 @@ ns = {
     '*ARGV*': MalList([]),
     'cons': lambda x, tail: MalList([x] + tail),
     'concat': lambda *args: MalList(sum(args, [])),
+    'nth': nth,
+    'first': lambda xs: xs[0] if xs else None,
+    'rest': lambda xs: MalList(xs[1:] if xs else []),
 }
