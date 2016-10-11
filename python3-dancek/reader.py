@@ -61,14 +61,19 @@ def read_form(reader):
     # reader macros
     elif first_token == "'":
         return reader_macro(reader, 'quote')
-    elif first_token == "`":
+    elif first_token == '`':
         return reader_macro(reader, 'quasiquote')
-    elif first_token == "~":
+    elif first_token == '~':
         return reader_macro(reader, 'unquote')
-    elif first_token == "~@":
+    elif first_token == '~@':
         return reader_macro(reader, 'splice-unquote')
-    elif first_token == "@":
+    elif first_token == '@':
         return reader_macro(reader, 'deref')
+    elif first_token == '^':
+        reader.next() # skip ^ token
+        metadata = read_form(reader)
+        content = read_form(reader)
+        return MalList([MalSymbol('with-meta'), content, metadata])
 
     # atoms
     else:
@@ -112,5 +117,5 @@ def read_atom(reader):
         return MalSymbol(atom)
 
 def reader_macro(reader, symbol):
-    reader.next()
+    reader.next() # skip macro token
     return MalList([MalSymbol(symbol), read_form(reader)])
