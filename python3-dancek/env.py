@@ -28,5 +28,5 @@ class Env(object):
     def get(self, key):
         env = self.find(key)
         if env == None:
-            raise MalException("Symbol %s is not defined" % key)
+            raise MalException("'%s' not found" % key)
         return env.data[key]

@@ -17,7 +17,7 @@ class MalHashmap(dict):
     terminator = '}'
 
     def __init__(self, list_or_dict):
-        if isinstance(list_or_dict, list):
+        if isinstance(list_or_dict, list) or isinstance(list_or_dict, tuple):
             # constructed from alternating keys and values
             dict.__init__(self, zip(list_or_dict[::2], list_or_dict[1::2]))
         else:
@@ -28,7 +28,7 @@ class MalException(Exception):
         self.description = description
 
     def __str__(self):
-        return self.description
+        return str(self.description)
 
 class MalFunction(object):
     def __init__(self, ast, params, env, fn, is_macro=False):

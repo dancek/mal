@@ -1,5 +1,5 @@
 import printer, reader
-from types import MalList, MalString, MalAtom, MalException
+from types import *
 
 def pr_str(*args):
     return MalString(' '.join(map(printer.pr_str, args)))
@@ -32,6 +32,9 @@ def nth(xs, i):
     except IndexError:
         raise MalException("Index %d out of bounds for %s" % (i, xs))
 
+def throw(msg):
+    raise MalException(msg)
+
 ns = {
     '+': lambda a,b: a+b,
     '-': lambda a,b: a-b,
@@ -63,4 +66,27 @@ ns = {
     'nth': nth,
     'first': lambda xs: xs[0] if xs else None,
     'rest': lambda xs: MalList(xs[1:] if xs else []),
+    'throw': throw,
+    'apply': lambda f, *args: f(*(list(args[:-1]) + args[-1])),
+    'map': lambda f, xs: MalList(map(f, xs)),
+    'nil?': lambda x: x is None,
+    'true?': lambda x: x is True,
+    'false?': lambda x: x is False,
+    'symbol?': lambda x: isinstance(x, MalSymbol),
+
+    'symbol': lambda s: MalSymbol(s),
+    'keyword': lambda s: MalKeyword(':' + s),
+    'keyword?': lambda x: isinstance(x, MalKeyword),
+    'vector': lambda *xs: MalVector(xs),
+    'vector?': lambda x: isinstance(x, MalVector),
+    'hash-map': lambda *xs: MalHashmap(xs),
+    'map?': lambda x: isinstance(x, MalHashmap),
+     # this assoc impl requires Python 3.5 (PEP 448) for multiple unpackings!
+    'assoc': lambda dct, *xs: MalHashmap({**dct, **MalHashmap(xs)}),
+    'dissoc': lambda dct, *rm: MalHashmap({k:v for k,v in dct.items() if k not in rm}),
+    'get': lambda dct, key: dct.get(key, None) if dct else None,
+    'contains?': lambda dct, key: key in dct,
+    'keys': lambda dct: MalList(dct.keys()),
+    'vals': lambda dct: MalList(dct.values()),
+    'sequential?': lambda x: isinstance(x, list),
 }
