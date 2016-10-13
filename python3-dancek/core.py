@@ -53,6 +53,21 @@ def seq(xs):
     # MalString -> MalList (containing each character)
     return MalList(xs)
 
+def python_eval(code):
+    try:
+        output = eval(code)
+        if isinstance(output, list):
+            return MalList(output)
+        elif isinstance(output, dict):
+            return MalHashmap(output)
+        elif isinstance(output, str):
+            return MalString(str)
+        else:
+            return output
+    except Exception as e:
+        # catch all exceptions and wrap them in a MalException
+        throw("PYTHON %s: %s" % (type(e).__name__, e))
+
 ns = {
     '+': lambda a,b: a+b,
     '-': lambda a,b: a-b,
@@ -115,4 +130,6 @@ ns = {
     'time-ms': lambda: int(time.time() * 1000),
     'conj': conj,
     'seq': seq,
+
+    'py-eval': python_eval,
 }
