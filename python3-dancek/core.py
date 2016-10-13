@@ -1,3 +1,5 @@
+import time
+
 import printer, reader
 from types import *
 
@@ -34,6 +36,22 @@ def nth(xs, i):
 
 def throw(msg):
     raise MalException(msg)
+
+def conj(xs, *ys):
+    if isinstance(xs, MalList):
+        return MalList(list(ys[::-1]) + xs)
+    elif isinstance(xs, MalVector):
+        return MalVector(xs + list(ys))
+
+def seq(xs):
+    if not xs:
+        return None
+
+    # convert as follows:
+    # MalList -> MalList
+    # MalVector -> MalList
+    # MalString -> MalList (containing each character)
+    return MalList(xs)
 
 ns = {
     '+': lambda a,b: a+b,
@@ -72,15 +90,16 @@ ns = {
     'nil?': lambda x: x is None,
     'true?': lambda x: x is True,
     'false?': lambda x: x is False,
+    'string?': lambda x: isinstance(x, MalString),
     'symbol?': lambda x: isinstance(x, MalSymbol),
+    'keyword?': lambda x: isinstance(x, MalKeyword),
+    'map?': lambda x: isinstance(x, MalHashmap),
 
     'symbol': lambda s: MalSymbol(s),
     'keyword': lambda s: MalKeyword(':' + s),
-    'keyword?': lambda x: isinstance(x, MalKeyword),
     'vector': lambda *xs: MalVector(xs),
     'vector?': lambda x: isinstance(x, MalVector),
     'hash-map': lambda *xs: MalHashmap(xs),
-    'map?': lambda x: isinstance(x, MalHashmap),
      # this assoc impl requires Python 3.5 (PEP 448) for multiple unpackings!
     'assoc': lambda dct, *xs: MalHashmap({**dct, **MalHashmap(xs)}),
     'dissoc': lambda dct, *rm: MalHashmap({k:v for k,v in dct.items() if k not in rm}),
@@ -93,4 +112,7 @@ ns = {
     'readline': lambda prompt: input(prompt),
     'meta': lambda x: x.metadata if hasattr(x, 'metadata') else None,
     'with-meta': MalFunction.with_metadata,
+    'time-ms': lambda: int(time.time() * 1000),
+    'conj': conj,
+    'seq': seq,
 }

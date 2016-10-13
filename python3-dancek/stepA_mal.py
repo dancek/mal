@@ -174,8 +174,6 @@ def main():
     rep("(defmacro! cond (fn* (& xs) (if (> (count xs) 0) (list 'if (first xs) (if (> (count xs) 1) (nth xs 1) (throw \"odd number of forms to cond\")) (cons 'cond (rest (rest xs)))))))")
     rep("(defmacro! or (fn* (& xs) (if (empty? xs) nil (if (= 1 (count xs)) (first xs) `(let* (or_FIXME ~(first xs)) (if or_FIXME or_FIXME (or ~@(rest xs))))))))")
 
-    rep("(println (str \"Mal [\" *host-language* \"]\"))")
-
     if len(sys.argv) > 1:
         filename = sys.argv[1]
         if len(sys.argv) > 2:
@@ -183,6 +181,8 @@ def main():
             repl_env.set("*ARGV*", argv)
         rep('(load-file "%s")' % filename)
         sys.exit(0)
+
+    rep("(println (str \"Mal [\" *host-language* \"]\"))")
 
     while True:
         i = input('user> ')
