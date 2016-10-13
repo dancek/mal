@@ -28,15 +28,23 @@ class MalException(Exception):
         self.description = description
 
 class MalFunction(object):
-    def __init__(self, ast, params, env, fn, is_macro=False):
+    def __init__(self, ast, params, env, fn, is_macro=False, metadata=None):
         self.ast = ast
         self.params = params
         self.env = env
         self.fn = fn
         self.is_macro = is_macro
+        self.metadata = metadata
 
     def __call__(self, *args):
         return self.fn(*args)
+
+    @staticmethod
+    def with_metadata(f, metadata):
+        # allow setting metadata on core functions too
+        if not isinstance(f, MalFunction):
+            return MalFunction(None, None, None, f, False, metadata)
+        return MalFunction(f.ast, f.params, f.env, f.fn, f.is_macro, metadata)
 
 class MalAtom(object):
     def __init__(self, target):

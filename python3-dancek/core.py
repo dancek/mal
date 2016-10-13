@@ -89,4 +89,8 @@ ns = {
     'keys': lambda dct: MalList(dct.keys()),
     'vals': lambda dct: MalList(dct.values()),
     'sequential?': lambda x: isinstance(x, list),
+
+    'readline': lambda prompt: input(prompt),
+    'meta': lambda x: x.metadata if hasattr(x, 'metadata') else None,
+    'with-meta': MalFunction.with_metadata,
 }
