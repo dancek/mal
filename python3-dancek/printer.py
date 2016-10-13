@@ -12,7 +12,9 @@ def _tree_to_string(tree, print_readably):
         return '{%s}' % _dict_contents(tree, print_readably)
     elif isinstance(tree, MalSymbol):
         return tree
-    elif isinstance(tree, MalString):
+    elif isinstance(tree, MalKeyword):
+        return tree
+    elif isinstance(tree, str): # mostly MalString
         if print_readably:
             s = tree \
                 .replace('\\', '\\\\') \
@@ -21,8 +23,6 @@ def _tree_to_string(tree, print_readably):
             return '"%s"' % s
         else:
             return '%s' % tree
-    elif isinstance(tree, MalKeyword):
-        return tree
     elif isinstance(tree, MalAtom):
         return "(atom %s)" % tree.target
     elif tree is None:
@@ -36,6 +36,8 @@ def _tree_to_string(tree, print_readably):
     elif callable(tree):
         # function
         return '#'
+    elif isinstance(tree, MalException):
+        return _tree_to_string(tree.description, print_readably)
     else:
         return "UNHANDLED TYPE (%s): %s" % (type(tree), tree)
 

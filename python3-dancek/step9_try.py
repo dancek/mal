@@ -130,7 +130,7 @@ def EVAL(ast, env):
                     if catch_ast[0] != 'catch*':
                         raise MalException('Expected (catch* exception block): %s' % catch_ast)
                     exception_name = catch_ast[1]
-                    catch_env = Env(env, [exception_name], [MalString(e)])
+                    catch_env = Env(env, [exception_name], [e])
                     return EVAL(catch_ast[2], catch_env)
 
             else:

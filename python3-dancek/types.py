@@ -27,9 +27,6 @@ class MalException(Exception):
     def __init__(self, description):
         self.description = description
 
-    def __str__(self):
-        return str(self.description)
-
 class MalFunction(object):
     def __init__(self, ast, params, env, fn, is_macro=False):
         self.ast = ast
